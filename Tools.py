@@ -29,3 +29,16 @@ def end_program():
     while True:
         if ord(msvcrt.getch()) in [68, 100]:
             break
+
+
+def timeset_split(timeset, graph):
+    timeset = timeset[2:-2].split(',')
+    start = int(float(timeset[0]))
+    if graph.round < start:
+        graph.round = start
+    if timeset[1] == ' Infinity':
+        end = -1
+    else:
+        end = int(float(timeset[1]))
+
+    return [start, end]

@@ -40,15 +40,11 @@ if is_csv == '0':
             for row in reader:
                 node_id = int(row['id'])
                 node_label = row['label']
-                timeset = row['timeset'][2:-2].split(',')
-                node_start = int(float(timeset[0]))
-                if graph.round < node_start:
-                    graph.round = node_start
-                if timeset[1] == ' Infinity':
-                    node_end = -1
-                else:
-                    node_end = int(float(timeset[1]))
-                    now_round = node_end
+
+                timeset = Tools.timeset_split(row['timeset'], graph)
+                node_start = timeset[0]
+                node_end = timeset[1]
+
                 node_weight = int(row['weight'])
                 node = Node(id=node_id,
                             label=node_label,
@@ -82,12 +78,11 @@ if is_csv == '0':
                 edge_id = int(row['id'])
                 edge_source = int(row['Source'])
                 edge_target = int(row['Target'])
-                timeset = row['timeset'][2:-2].split(',')
-                edge_start = int(float(timeset[0]))
-                if timeset[1] == ' Infinity':
-                    edge_end = -1
-                else:
-                    edge_end = int(float(timeset[1]))
+
+                timeset = Tools.timeset_split(row['timeset'], graph)
+                edge_start = timeset[0]
+                edge_end = timeset[1]
+
                 #edge_weight = float(row['weight'])
                 edge = Edge(id=edge_id,
                             source_id=edge_source,
@@ -224,7 +219,6 @@ print("---")
 gexf = Gexf("myc", "DLG")
 
 gephi_graph = gexf.addGraph("directed", "dynamic", "DLG")
-
 atr1 = gephi_graph.addNodeAttribute('weight')
 atr2 = gephi_graph.addNodeAttribute('logical', type="string")
 
@@ -263,7 +257,6 @@ for edge in Edge.edge_list:
                             source=str(edge.source_id),
                             target=str(edge.target_id),
                             start=str(edge.start))
-print(Edge.max_ID)
 
 output_file_name = input("Please input file name:") + '.gexf'
 output_file = open(output_file_name, "wb")
