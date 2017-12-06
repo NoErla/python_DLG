@@ -10,6 +10,7 @@ from gexf import Gexf
 
 graph = Graph()
 while True:
+    is_random_mode = input("Whether to use random mode or not?([Y]/[N]):")
     is_csv = input("input [0] import csv file, or input [1] use default graph(K4): ")
     if is_csv != '0' and is_csv != '1':
         print("Please input [0] or [1]")
@@ -127,43 +128,65 @@ graph.round_plus()
 
 #graph.merge(graph.nodeList[3], graph.nodeList[4])
 print("---")
-for i in range(join_times):
+if is_random_mode == "N":
+    for i in range(join_times):
 
-    print("Now join times：" + str(i))
+        print("Now join times：" + str(i+1))
 
-    node_alive_list = list(filter(Tools.end_less_than_0, Node.node_list))
+        node_alive_list = list(filter(Tools.end_less_than_0, Node.node_list))
 
-    while True:
-        random_node = random.choice(node_alive_list)
-        print(random_node)
+        while True:
+            random_node = random.choice(node_alive_list)
+            print(random_node)
 
-        if Node.is_res_node(random_node):
-            break
+            if Node.is_res_node(random_node):
+                break
 
+        graph.round_plus()
+        graph.split(random_node)
+        #graph.clear()
+
+    print("---")
     graph.round_plus()
-    graph.split(random_node)
-    #graph.clear()
+    for i in range(leave_times):
 
-print("---")
-graph.round_plus()
-for i in range(leave_times):
+        print("Now leave times：" + str(i+1))
 
-    print("Now leave times：" + str(i))
+        node_alive_list = list(filter(Tools.end_less_than_0_and_not_initializtion, Node.node_list))
 
-    node_alive_list = list(filter(Tools.end_less_than_0_and_not_initializtion, Node.node_list))
+        while True:
+            random_node = random.choice(node_alive_list)
+            print(random_node)
+            sibling_node = Node.find_sibling_node(random_node)
+            if sibling_node:
+                new_node = graph.merge(random_node, sibling_node)
+                break
 
-    while True:
-        random_node = random.choice(node_alive_list)
-        print(random_node)
-        sibling_node = Node.find_sibling_node(random_node)
-        if sibling_node:
-            new_node = graph.merge(random_node, sibling_node)
-            break
+        print("%s's sibling node is ：%s" % (random_node.label, sibling_node.label))
+        print("new node is %s,logical nodes is：%s, %s" % (new_node.label, new_node.logical_nodes[0].label, new_node.logical_nodes[1].label))
+        graph.round_plus()
+        #graph.clear()
 
-    print("%s's sibling node is ：%s" % (random_node.label, sibling_node.label))
-    print("new node is %s,logical nodes is：%s, %s" % (new_node.label, new_node.logical_nodes[0].label, new_node.logical_nodes[1].label))
-    graph.round_plus()
-    #graph.clear()
+elif is_random_mode == "Y":
+    for i in range(join_times):
+        print("Now join times：" + str(i + 1))
+
+        node_alive_list = list(filter(Tools.end_less_than_0, Node.node_list))
+
+        node_id = input("Please input node's id:")
+
+        while True:
+            random_node = random.choice(node_alive_list)
+            print(random_node)
+
+            if Node.is_res_node(random_node):
+                break
+
+        graph.round_plus()
+        graph.split(random_node)
+        # graph.clear()
+
+    print("---")
 
 print("---")
 #for node in Node.node_list:
@@ -221,4 +244,4 @@ output_file = open(output_file_name, "wb")
 gexf.write(output_file)
 
 
-Tools.end_program()
+#Tools.end_program()

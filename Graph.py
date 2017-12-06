@@ -60,12 +60,10 @@ class Graph:
                 if new_node not in out_neighbour.in_neighbours:
                     out_neighbour.add_in_neighbour(new_node)
         #end原点
-        Node.end_node(node, self2
-                      @.round)
+        Node.end_node(node, self.round)
 
-    @staticmethod
-    def merge(node1, node2):
-        new_node = Node(node1.label, start=Graph.round)
+    def merge(self, node1, node2):
+        new_node = Node(node1.label, start=self.round)
         new_node.logical_nodes.append(node1)
         new_node.logical_nodes.append(node2)
         #求入点并集
@@ -73,12 +71,10 @@ class Graph:
         #求出点并集
         new_node.out_neighbours = list(set(node1.out_neighbours).union(set(node2.out_neighbours)))
 
-        Node.end_node(node1, Graph.round)
-        Node.end_node(node2, Graph.round)
+        Node.end_node(node1, self.round)
+        Node.end_node(node2, self.round)
         return new_node
 
-
-    #每次round增加就清理过期的neighbour数据
     def round_plus(self):
         self.round += 1
 
