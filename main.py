@@ -128,7 +128,7 @@ graph.round_plus()
 
 #graph.merge(graph.nodeList[3], graph.nodeList[4])
 print("---")
-if is_random_mode == "N":
+if is_random_mode == "Y":
     for i in range(join_times):
 
         print("Now join times：" + str(i+1))
@@ -152,7 +152,7 @@ if is_random_mode == "N":
 
         print("Now leave times：" + str(i+1))
 
-        node_alive_list = list(filter(Tools.end_less_than_0_and_not_initializtion, Node.node_list))
+        node_alive_list = list(filter(Tools.end_less_than_0_and_can_merge, Node.node_list))
 
         while True:
             random_node = random.choice(node_alive_list)
@@ -167,27 +167,61 @@ if is_random_mode == "N":
         graph.round_plus()
         #graph.clear()
 
-elif is_random_mode == "Y":
+elif is_random_mode == "N":
     for i in range(join_times):
+
         print("Now join times：" + str(i + 1))
 
         node_alive_list = list(filter(Tools.end_less_than_0, Node.node_list))
 
-        node_id = input("Please input node's id:")
-
         while True:
-            random_node = random.choice(node_alive_list)
-            print(random_node)
+            node_id = int(input("Please input node's id:"))
+            split_node = Node.find_node_by_id(node_id)
+            if split_node:
+                if split_node.end < 0:
+                    if Node.is_res_node(split_node):
+                        graph.round_plus()
+                        graph.split(split_node)
+                        break
+                    else:
+                        print("Not Res-Node")
+                else:
+                    print("Not Alive")
+            else:
+                print("No such node")
 
-            if Node.is_res_node(random_node):
-                break
-
-        graph.round_plus()
-        graph.split(random_node)
         # graph.clear()
 
     print("---")
+    graph.round_plus()
 
+    for i in range(leave_times):
+
+        print("Now leave times：" + str(i+1))
+
+        node_alive_list = list(filter(Tools.end_less_than_0_and_can_merge, Node.node_list))
+
+        while True:
+            node_one_id = int(input("Please input first node's id:"))
+            node_one = Node.find_node_by_id(node_one_id)
+            if (not node_one) or node_one not in node_alive_list:
+                print("No Such Node or Not Alive Node")
+                continue
+            node_two_id = int(input("Please input second node's id:"))
+            node_two = Node.find_node_by_id(node_two_id)
+
+            if (not node_two) or node_two not in node_alive_list:
+                print("No Such Node or Not Alive Node")
+                continue
+            if node_one.label[1:] != node_two.label[1:]:
+                print("Not Sibling Nodes")
+                continue
+
+            new_node = graph.merge(node_one, node_two)
+
+        print("new node is %s,logical nodes is：%s, %s" % (new_node.label, new_node.logical_nodes[0].label, new_node.logical_nodes[1].label))
+        graph.round_plus()
+        #graph.clear()
 print("---")
 #for node in Node.node_list:
 #    print(node)
