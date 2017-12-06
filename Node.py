@@ -61,7 +61,7 @@ class Node:
 
     @staticmethod
     def find_sibling_node(node):
-        alive_node_list = list(filter(Tools.end_less_than_0_and_can_merge, Node.node_alive_list))
+        alive_node_list = list(filter(Tools.node_alive_and_can_be_merged, Node.node_alive_list))
         for alive_node in alive_node_list:
             if alive_node.label != node.label and alive_node.label[1:] == node.label[1:]:
                 return alive_node

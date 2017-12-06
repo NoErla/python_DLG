@@ -111,15 +111,9 @@ if is_csv == '0':
 
 else:
 
-    node_conut = int(input("Input the number of nodes:"))
+    k = int(input("Input the number of nodes:"))
 
-    for i in range(node_conut):
-        Node(label=str(i))
-
-    for node in Node.node_list:
-        test_list = list(set(Node.node_list) - set([node]))
-        for another_node in test_list:
-            graph.connect(node, another_node)
+    graph.create_complete_graph(k)
 
 join_times = int(input("join times:"))
 leave_times = int(input("leave times:"))
@@ -150,7 +144,7 @@ if is_random_mode == "Y":
 
         print("Now leave times：" + str(i+1))
 
-        node_alive_list = list(filter(Tools.end_less_than_0_and_can_merge, Node.node_alive_list))
+        node_alive_list = list(filter(Tools.node_alive_and_can_be_merged, Node.node_alive_list))
 
         while True:
             random_node = random.choice(node_alive_list)
@@ -197,7 +191,7 @@ elif is_random_mode == "N":
 
         print("Now leave times：" + str(i+1))
 
-        node_alive_list = list(filter(Tools.end_less_than_0_and_can_merge, Node.node_list))
+        node_alive_list = list(filter(Tools.node_alive_and_can_be_merged, Node.node_list))
 
         while True:
             node_one_id = int(input("Please input first node's id:"))

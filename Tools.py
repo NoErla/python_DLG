@@ -11,8 +11,7 @@ def end_less_than_0(node):
 '''
 
 
-#判断end是否小于0
-def end_less_than_0_and_can_merge(node):
+def node_alive_and_can_be_merged(node):
     if len(node.label) == 1:
         return False
     for in_neighbour in node.in_neighbours:
@@ -22,6 +21,7 @@ def end_less_than_0_and_can_merge(node):
         if len(out_neighbour.label) > len(node.label):
             return False
     return True
+
 
 def end_program():
     print("Press 'D' to exit...")

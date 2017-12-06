@@ -24,8 +24,7 @@ class Graph:
     def split(self, node):
         #n = 原点的label长度
         n = len(node.label)
-        #迭代
-        alive_in_neighbours = list(filter(Tools.end_less_than_0, node.in_neighbours))
+        alive_in_neighbours = [x for x in node.in_neighbours if x.end < 0]
         for in_neighbour in alive_in_neighbours:
             #m = 入点的label长度
             m = len(in_neighbour.label)
@@ -50,7 +49,7 @@ class Graph:
             if new_node not in in_neighbour.in_neighbours:
                 in_neighbour.add_out_neighbour(new_node)
             #连接原点的出点和新点
-            alive_out_neighbours = list(filter(Tools.end_less_than_0, node.out_neighbours))
+            alive_out_neighbours = [x for x in node.out_neighbours if x.end < 0]
             for out_neighbour in alive_out_neighbours:
                 new_edge2 = Edge.find_by_source_and_target(new_node.id, out_neighbour.id)
                 if not new_edge2:
@@ -81,10 +80,19 @@ class Graph:
 
     @staticmethod
     def clear():
-        alive_node_list = list(filter(Tools.end_less_than_0, Node.node_list))
+        alive_node_list = [x for x in Node.node_list if x.end < 0]
         for alive_node in alive_node_list:
-            alive_node.in_neighbours = list(filter(Tools.end_less_than_0, alive_node.in_neighbours))
-            alive_node.out_neighbours = list(filter(Tools.end_less_than_0, alive_node.out_neighbours))
+            alive_node.in_neighbours = [x for x in alive_node.in_neighbours if x.end < 0]
+            alive_node.out_neighbours = [x for x in alive_node.out_neighbours if x.end < 0]
+
+    def create_complete_graph(self, k):
+        for i in range(k):
+            Node(label=str(i))
+
+        for node in Node.node_list:
+            test_list = list(set(Node.node_list) - set([node]))
+            for another_node in test_list:
+                self.connect(node, another_node)
 
 
 
