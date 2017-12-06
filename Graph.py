@@ -76,6 +76,7 @@ class Graph:
         return new_node
 
     def round_plus(self):
+        Node.node_alive_list = [x for x in Node.node_list if x.end < 0]
         self.round += 1
 
     @staticmethod

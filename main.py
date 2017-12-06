@@ -9,15 +9,24 @@ import random
 from gexf import Gexf
 
 graph = Graph()
+
 while True:
-    is_random_mode = input("Whether to use random mode or not?([Y]/[N]):")
-    is_csv = input("input [0] import csv file, or input [1] use default graph(K4): ")
-    if is_csv != '0' and is_csv != '1':
-        print("Please input [0] or [1]")
+    is_random_mode = str.upper(input("Whether to use random mode or not?([Y]/[N]):"))
+    if is_random_mode != 'Y' and is_random_mode != 'N':
+        print("Input Error!")
     else:
         break
 
+while True:
+    is_csv = input("input [0] import csv file, or input [1] use complete graph: ")
+    if is_csv != '0' and is_csv != '1':
+        print("Input Error!")
+    else:
+        break
+
+#import csv file
 if is_csv == '0':
+
     node_file_name = input("Please input Node filename(No Suffix):") + '.csv'
     '''
     id: row[0]
@@ -56,8 +65,6 @@ if is_csv == '0':
     except ValueError:
         print("File Mismatch")
         Tools.end_program()
-
-
 
     edge_file_name = input("Please input Edge filename(No Suffix):") + '.csv'
     '''
@@ -103,23 +110,16 @@ if is_csv == '0':
                 target.in_neighbours.append(source)
 
 else:
-    node0 = Node(label='0')
-    node1 = Node(label='1')
-    node2 = Node(label='2')
-    node3 = Node(label='3')
 
-    graph.connect(node0, node1)
-    graph.connect(node0, node2)
-    graph.connect(node0, node3)
-    graph.connect(node1, node0)
-    graph.connect(node1, node2)
-    graph.connect(node1, node3)
-    graph.connect(node2, node0)
-    graph.connect(node2, node1)
-    graph.connect(node2, node3)
-    graph.connect(node3, node0)
-    graph.connect(node3, node1)
-    graph.connect(node3, node2)
+    node_conut = int(input("Input the number of nodes:"))
+
+    for i in range(node_conut):
+        Node(label=str(i))
+
+    for node in Node.node_list:
+        test_list = list(set(Node.node_list) - set([node]))
+        for another_node in test_list:
+            graph.connect(node, another_node)
 
 join_times = int(input("join times:"))
 leave_times = int(input("leave times:"))
@@ -133,10 +133,8 @@ if is_random_mode == "Y":
 
         print("Now join times：" + str(i+1))
 
-        node_alive_list = list(filter(Tools.end_less_than_0, Node.node_list))
-
         while True:
-            random_node = random.choice(node_alive_list)
+            random_node = random.choice(Node.node_alive_list)
             print(random_node)
 
             if Node.is_res_node(random_node):
@@ -152,7 +150,7 @@ if is_random_mode == "Y":
 
         print("Now leave times：" + str(i+1))
 
-        node_alive_list = list(filter(Tools.end_less_than_0_and_can_merge, Node.node_list))
+        node_alive_list = list(filter(Tools.end_less_than_0_and_can_merge, Node.node_alive_list))
 
         while True:
             random_node = random.choice(node_alive_list)
@@ -172,7 +170,7 @@ elif is_random_mode == "N":
 
         print("Now join times：" + str(i + 1))
 
-        node_alive_list = list(filter(Tools.end_less_than_0, Node.node_list))
+        node_alive_list = [x for x in Node.node_list if x.end < 0]
 
         while True:
             node_id = int(input("Please input node's id:"))

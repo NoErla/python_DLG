@@ -1,11 +1,13 @@
 import Tools
 import random
 
+
 class Node:
 
     max_ID = 0
     nodeCount = 0
     node_list = []
+    node_alive_list = []
 
     def __init__(self, label, id=-1, weight=0, start=1, end=-1):
         if id != -1:
@@ -59,7 +61,7 @@ class Node:
 
     @staticmethod
     def find_sibling_node(node):
-        alive_node_list = list(filter(Tools.end_less_than_0_and_can_merge, Node.node_list))
+        alive_node_list = list(filter(Tools.end_less_than_0_and_can_merge, Node.node_alive_list))
         for alive_node in alive_node_list:
             if alive_node.label != node.label and alive_node.label[1:] == node.label[1:]:
                 return alive_node
@@ -110,10 +112,6 @@ class Node:
                 return node
 
         return
-
-    def random_find_alive_node(self):
-        return random.choice(list(filter(Tools.end_less_than_0, self.node_list)))
-
 
 
 
