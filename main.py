@@ -35,7 +35,7 @@ if is_csv == '0':
     weight: row[3]
     '''
     try:
-        with open(node_file_name, 'r') as f:  # 采用b的方式处理可以省去很多问题
+        with open(node_file_name, 'r') as f:
             reader = csv.DictReader(f)
             for row in reader:
                 node_id = int(row['id'])
@@ -70,7 +70,7 @@ if is_csv == '0':
     weight: row[6]
     '''
     try:
-        with open(edge_file_name, 'r') as f:  # 采用b的方式处理可以省去很多问题
+        with open(edge_file_name, 'r') as f:
             reader = csv.DictReader(f)
             for row in reader:
                 #if 'Infinity' not in row['timeset']:
