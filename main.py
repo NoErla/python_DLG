@@ -263,4 +263,4 @@ output_file = open(output_file_name, "wb")
 gexf.write(output_file)
 
 
-#Tools.end_program()
+Tools.end_program()
