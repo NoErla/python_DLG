@@ -1,4 +1,5 @@
 # python_DLG
 
 
-main.exe is in build/main.
+You can download latest version in https://github.com/NoErla/python_DLG/releases/tag/version
+
