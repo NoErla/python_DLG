@@ -74,6 +74,9 @@ class Graph:
 
         Node.end_node(node1, self.round)
         Node.end_node(node2, self.round)
+        if not Node.find_sibling_node(new_node):
+            new_node.label = new_node.label[1:]
+            new_node.weight = 1
         return new_node
 
     def round_plus(self):

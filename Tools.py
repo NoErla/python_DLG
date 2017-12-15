@@ -12,6 +12,8 @@ def end_less_than_0(node):
 
 
 def node_alive_and_can_be_merged(node):
+    if node.end > 0:
+        return False
     if len(node.label) == 1:
         return False
     for in_neighbour in node.in_neighbours:
