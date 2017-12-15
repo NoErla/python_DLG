@@ -2,7 +2,6 @@ import Tools
 
 
 class Node:
-
     max_ID = 0
     nodeCount = 0
     node_list = []
@@ -112,6 +111,27 @@ class Node:
 
         return
 
+    @staticmethod
+    def breadth_first_search(root):
 
+        visited = []
+        queue = []
+        queue.append(root)
 
+        def bfs():
+            while len(queue) > 0:
+                node = queue.pop()
+                visited.append(node.id)
+                neighbours = list(set(node.in_neighbours).union(set(node.out_neighbours)))
+                for n in neighbours:
+                    if n.id not in visited:
+                        if Node.is_res_node(n):
+                            print("The nearest Res-Node is:")
+                            print(n)
+                            return node
+                        else:
+                            queue.append(n)
+                    else:
+                        continue
 
+        bfs()

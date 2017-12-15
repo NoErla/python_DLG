@@ -170,7 +170,9 @@ elif is_random_mode == "N":
                         graph.split(split_node)
                         break
                     else:
-                        print("Not Res-Node")
+                        print("Not Res-Node,Search the Nearest Res-Node...")
+                        Node.breadth_first_search(split_node)
+                        break
                 else:
                     print("Not Alive")
             else:
