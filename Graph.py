@@ -62,7 +62,9 @@ class Graph:
         Node.end_node(node, self.round)
 
     def merge(self, node1, node2):
-        new_node = Node(node1.label, start=self.round)
+
+        new_node_weight = node1.weight + node2.weight
+        new_node = Node(node1.label, start=self.round, weight=new_node_weight)
         new_node.logical_nodes.append(node1)
         new_node.logical_nodes.append(node2)
         #求入点并集

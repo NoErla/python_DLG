@@ -8,7 +8,7 @@ class Node:
     node_list = []
     node_alive_list = []
 
-    def __init__(self, label, id=-1, weight=0, start=1, end=-1):
+    def __init__(self, label, id=-1, weight=1, start=1, end=-1):
         if id != -1:
             self.id = id
             if Node.max_ID < id:

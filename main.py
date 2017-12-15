@@ -24,7 +24,6 @@ while True:
     else:
         break
 
-#import csv file
 if is_csv == '0':
 
     node_file_name = input("Please input Node filename(No Suffix):") + '.csv'
@@ -228,7 +227,7 @@ for node in Node.node_list:
                             label=node.label,
                             start=str(node.start),
                             end=str(node.end))
-        tmp.addAttribute(atr1, '1')
+        tmp.addAttribute(atr1, str(node.weight))
 
         if node.logical_nodes:
             logical = "%d %d" % (node.logical_nodes[0].id, node.logical_nodes[1].id)
@@ -239,7 +238,7 @@ for node in Node.node_list:
                             label=node.label,
                             start=str(node.start))
 
-        tmp.addAttribute(atr1, '1')
+        tmp.addAttribute(atr1, str(node.weight))
 
         if node.logical_nodes:
             logical = "%d %d" % (node.logical_nodes[0].id, node.logical_nodes[1].id)
@@ -263,4 +262,4 @@ output_file = open(output_file_name, "wb")
 gexf.write(output_file)
 
 
-Tools.end_program()
+#Tools.end_program()
