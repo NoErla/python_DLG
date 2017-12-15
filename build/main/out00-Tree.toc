@@ -1,5 +1,0 @@
-('D:\\python_DLG\\build\\main\\pygexf-0.2.2-py3.6.egg',
- None,
- {'EGG-INFO', '*.pyd', '*.pyo', '*.pyc', '*.so', '*.py'},
- 'DATA',
- [])

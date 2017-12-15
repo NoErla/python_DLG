@@ -1,0 +1,5 @@
+*.gexf
+*.csv
+*.zip
+/dist/*
+/build/*
