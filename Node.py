@@ -7,7 +7,7 @@ class Node:
     node_list = []
     node_alive_list = []
 
-    def __init__(self, label, id=-1, weight=1, start=1, end=-1):
+    def __init__(self, label=None, id=-1, weight=1, start=1, end=-1):
         if id != -1:
             self.id = id
             if Node.max_ID < id:
@@ -48,11 +48,15 @@ class Node:
                 continue
             if len(in_neighbour.label) < len(node.label):
                 return False
+            if in_neighbour.weight > node.weight:
+                return False
 
         for out_neighbour in node.out_neighbours:
             if out_neighbour.end > 0:
                 continue
             if len(out_neighbour.label) < len(node.label):
+                return False
+            if out_neighbour.weight > node.weight:
                 return False
 
         return True

@@ -1,6 +1,3 @@
-import msvcrt
-
-
 '''
 #判断end是否小于0
 def end_less_than_0(node):
@@ -26,12 +23,8 @@ def node_alive_and_can_be_merged(node):
 
 
 def end_program():
-    print("Press 'D' to exit...")
-
-    while True:
-        if ord(msvcrt.getch()) in [68, 100]:
-            break
-
+    input("You can close this program.")
+    exit()
 
 def timeset_split(timeset, graph):
     timeset = timeset[2:-2].split(',')

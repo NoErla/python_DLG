@@ -1,12 +1,12 @@
 import csv
-
-
+import sys
 from Edge import Edge
 from Node import Node
 from Graph import Graph
 import Tools
 import random
 from gexf import Gexf
+
 
 graph = Graph()
 
@@ -37,23 +37,35 @@ if is_csv == '0':
         with open(node_file_name, 'r') as f:
             reader = csv.DictReader(f)
             for row in reader:
-                node_id = int(row['id'])
-                node_label = row['label']
+                row_node = Node()
+                try:
+                    if 'id' in row:
+                        row_node.id = int(row['id'])
+                    elif 'Id' in row:
+                        row_node.id = int(row['Id'])
+                    else:
+                        raise ValueError("No id/Id field!")
 
-                timeset = Tools.timeset_split(row['timeset'], graph)
-                node_start = timeset[0]
-                node_end = timeset[1]
+                    if 'label' in row:
+                        row_node.label = int(row['label'])
+                    elif 'Label' in row:
+                        row_node.label = int(row['Label'])
+                    else:
+                        raise ValueError("No label/Label field!")
 
-                node_weight = int(row['weight'])
-                node = Node(id=node_id,
-                            label=node_label,
-                            start=node_start,
-                            end=node_end,
-                            weight=node_weight)
+                    timeset = Tools.timeset_split(row['timeset'], graph)
+                    row_node.start = timeset[0]
+                    row_node.end = timeset[1]
+
+                    row_node.weight = int(row['weight'])
+                except ValueError as err:
+                    print("No Field error: {0}".format(err))
+                    Tools.end_program()
+
                 if 'logical_nodes' in row:
                     logical_nodes = row['logical_nodes'].split(' ')
-                    node.logical_nodes.append(Node.find_node_by_id(int(logical_nodes[0])))
-                    node.logical_nodes.append(Node.find_node_by_id(int(logical_nodes[1])))
+                    row_node.logical_nodes.append(Node.find_node_by_id(int(logical_nodes[0])))
+                    row_node.logical_nodes.append(Node.find_node_by_id(int(logical_nodes[1])))
     except FileNotFoundError:
         print("No such file:" + node_file_name)
         Tools.end_program()
@@ -262,6 +274,5 @@ for edge in Edge.edge_list:
 output_file_name = input("Please input file name:") + '.gexf'
 output_file = open(output_file_name, "wb")
 gexf.write(output_file)
-
 
 #Tools.end_program()
