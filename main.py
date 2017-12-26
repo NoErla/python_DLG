@@ -1,5 +1,5 @@
 import csv
-import sys
+import time
 from Edge import Edge
 from Node import Node
 from Graph import Graph
@@ -47,9 +47,9 @@ if is_csv == '0':
                         raise ValueError("No id/Id field!")
 
                     if 'label' in row:
-                        row_node.label = int(row['label'])
+                        row_node.label = row['label']
                     elif 'Label' in row:
-                        row_node.label = int(row['Label'])
+                        row_node.label = row['Label']
                     else:
                         raise ValueError("No label/Label field!")
 
@@ -143,7 +143,6 @@ if is_random_mode == "Y":
         graph.round_plus()
         graph.split(random_node)
         #graph.clear()
-
     print("---")
     graph.round_plus()
     for i in range(leave_times):
@@ -222,7 +221,7 @@ elif is_random_mode == "N":
         print("new node is %s,logical nodes is：%s, %s" % (new_node.label, new_node.logical_nodes[0].label, new_node.logical_nodes[1].label))
         graph.round_plus()
         #graph.clear()
-print("---")
+print("---Now write into file---")
 #for node in Node.node_list:
 #    print(node)
 
