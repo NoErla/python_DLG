@@ -67,12 +67,41 @@ class Graph:
         Node.end_node(node, self.round)
 
     def weight_not_1_split(self, node):
+        node_alive_out_neighbours = [x for x in node.out_neighbours if x.end < 0]
+        node_alive_in_neighbours = [x for x in node.in_neighbours if x.end < 0]
         for logical_node in node.logical_nodes:
             new_node = Node(label=logical_node.label,
                             weight=logical_node.weight,
-                            start=self.round
-            )
+                            start=self.round)
+            new_node.out_neighbours.extend(node_alive_out_neighbours)
             new_node.logical_nodes.extend(logical_node.logical_nodes)
+            sub_logical_nodes = []
+            def preorder(n):
+                sub_logical_nodes.append(n.label[:-1])
+                if n.weight > 1:
+                    preorder(n.logical_nodes[0])
+                    preorder(n.logical_nodes[1])
+            preorder(new_node)
+            if sub_logical_nodes:
+                label_length = len(sub_logical_nodes[0])
+            for in_neighbour in node_alive_in_neighbours:
+                if in_neighbour.label[-label_length:] in sub_logical_nodes:
+                    new_edge = Edge.find_by_source_and_target(in_neighbour.id, new_node.id)
+                    if not new_edge:
+                        Edge(in_neighbour.id, new_node.id, start=self.round)
+                    if in_neighbour not in new_node.in_neighbour:
+                        new_node.add_in_neighbour(in_neighbour)
+                    if new_node not in in_neighbour.out_neighbours:
+                        in_neighbour.add_out_neighbour(new_node)
+            for out_neighbour in new_node.out_neighbours:
+                new_edge = Edge.find_by_source_and_target(new_node.id, out_neighbour.id)
+                if not new_edge:
+                    Edge(new_node.id, out_neighbour.id, start=self.round)
+                if out_neighbour not in new_node.out_neighbours:
+                    new_node.add_out_neighbour(out_neighbour)
+                if new_node not in out_neighbour.in_neighbours:
+                    out_neighbour.add_in_neighbour(new_node)
+        Node.end_node(node, self.round)
 
     def merge(self, node1, node2):
 
