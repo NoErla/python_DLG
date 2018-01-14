@@ -38,15 +38,17 @@ class Graph:
             new_name = "%s%s" % (in_neighbour.label[m-n:m-n+1], node.label)
             #create new node
             #Is new node repeat
-            if Node.find_node_by_label(new_name):
-                new_node = Node.find_node_by_label(new_name)
+            new_node = Node.find_node_by_label(new_name)
+            if new_node is not None:
+                print("Node is existed:")
+                print(new_node)
             else:
                 new_node = Node(new_name, start=self.round)
-            print("new node is :")
-            print(new_node)
+                print("New node is :")
+                print(new_node)
             #connect innei and new node
             new_edge = Edge.find_by_source_and_target(in_neighbour.id, new_node)
-            if not new_edge:
+            if new_edge is None:
                 new_edge = Edge(in_neighbour.id, new_node.id, start=self.round)
                 #print("new edge is :")
                 #print(new_edge)
@@ -58,7 +60,7 @@ class Graph:
             alive_out_neighbours = [x for x in node.out_neighbours if x.end < 0]
             for out_neighbour in alive_out_neighbours:
                 new_edge2 = Edge.find_by_source_and_target(new_node.id, out_neighbour.id)
-                if not new_edge2:
+                if new_edge2 is None:
                     Edge(new_node.id, out_neighbour.id, start=self.round)
                 if out_neighbour not in new_node.out_neighbours:
                     new_node.add_out_neighbour(out_neighbour)
