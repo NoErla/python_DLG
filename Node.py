@@ -118,8 +118,7 @@ class Node:
     @staticmethod
     def breadth_first_search(root):
 
-        visited = []
-        queue = []
+        visited, queue = [], []
         queue.append(root)
 
         def bfs():

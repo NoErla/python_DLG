@@ -22,12 +22,13 @@ class Graph:
 
     def split(self, node):
         if node.weight == 1:
-            self.weight_is_1_split(node)
+            return self.weight_is_1_split(node)
         else:
-            self.weight_not_1_split(node)
+            return self.weight_not_1_split(node)
 
     def weight_is_1_split(self, node):
         #n : length of node
+        new_node_list = []
         n = len(node.label)
         alive_in_neighbours = [x for x in node.in_neighbours if x.end < 0]
         for in_neighbour in alive_in_neighbours:
@@ -47,8 +48,8 @@ class Graph:
             new_edge = Edge.find_by_source_and_target(in_neighbour.id, new_node)
             if not new_edge:
                 new_edge = Edge(in_neighbour.id, new_node.id, start=self.round)
-                print("new edge is :")
-                print(new_edge)
+                #print("new edge is :")
+                #print(new_edge)
             if in_neighbour not in new_node.in_neighbours:
                 new_node.add_in_neighbour(in_neighbour)
             if new_node not in in_neighbour.in_neighbours:
@@ -63,10 +64,13 @@ class Graph:
                     new_node.add_out_neighbour(out_neighbour)
                 if new_node not in out_neighbour.in_neighbours:
                     out_neighbour.add_in_neighbour(new_node)
+            new_node_list.append(new_node)
         #set the value of original node's end to now round
         Node.end_node(node, self.round)
+        return new_node_list
 
     def weight_not_1_split(self, node):
+        new_node_list = []
         node_alive_out_neighbours = [x for x in node.out_neighbours if x.end < 0]
         node_alive_in_neighbours = [x for x in node.in_neighbours if x.end < 0]
         for logical_node in node.logical_nodes:
@@ -101,7 +105,9 @@ class Graph:
                     new_node.add_out_neighbour(out_neighbour)
                 if new_node not in out_neighbour.in_neighbours:
                     out_neighbour.add_in_neighbour(new_node)
+            new_node_list.append(new_node)
         Node.end_node(node, self.round)
+        return new_node_list
 
     def merge(self, node1, node2):
 

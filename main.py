@@ -174,14 +174,12 @@ elif is_random_mode == "N":
         if flag:
             split_node = contact_node
             graph.round_plus()
-            graph.split(split_node)
             # コンタクトノードの更新
-            new_node_list = [x for x in Node.node_list if x.start == graph.round]  # 新しくできたノードをリストにする
-            proxy = new_node_list[0]
+            new_node_list = graph.split(split_node)  # 新しくできたノードをリストにする
+            max_in_degree = new_node_list[0]
             for new_node in new_node_list:
-                if len(proxy.in_neighbours) <= len(new_node.in_neighbours):
-                    proxy = new_node
-                    contact_node = proxy
+                max_in_degree = new_node if len(new_node.in_neighbours) > len(max_in_degree.in_neighbours) else max_in_degree
+            contact_node = max_in_degree
         else:
             print("Not Res-Node,Search the Nearest Res-Node...")
             split_node = Node.breadth_first_search(contact_node)
