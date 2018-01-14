@@ -1,12 +1,12 @@
 import csv
-import time
+
+
 from Edge import Edge
 from Node import Node
 from Graph import Graph
 import Tools
 import random
 from gexf import Gexf
-
 
 graph = Graph()
 
@@ -37,35 +37,23 @@ if is_csv == '0':
         with open(node_file_name, 'r') as f:
             reader = csv.DictReader(f)
             for row in reader:
-                row_node = Node()
-                try:
-                    if 'id' in row:
-                        row_node.id = int(row['id'])
-                    elif 'Id' in row:
-                        row_node.id = int(row['Id'])
-                    else:
-                        raise ValueError("No id/Id field!")
+                node_id = int(row['id'])
+                node_label = row['label']
 
-                    if 'label' in row:
-                        row_node.label = row['label']
-                    elif 'Label' in row:
-                        row_node.label = row['Label']
-                    else:
-                        raise ValueError("No label/Label field!")
+                timeset = Tools.timeset_split(row['timeset'], graph)
+                node_start = timeset[0]
+                node_end = timeset[1]
 
-                    timeset = Tools.timeset_split(row['timeset'], graph)
-                    row_node.start = timeset[0]
-                    row_node.end = timeset[1]
-
-                    row_node.weight = int(row['weight'])
-                except ValueError as err:
-                    print("No Field error: {0}".format(err))
-                    Tools.end_program()
-
+                node_weight = int(row['weight'])
+                node = Node(id=node_id,
+                            label=node_label,
+                            start=node_start,
+                            end=node_end,
+                            weight=node_weight)
                 if 'logical_nodes' in row:
                     logical_nodes = row['logical_nodes'].split(' ')
-                    row_node.logical_nodes.append(Node.find_node_by_id(int(logical_nodes[0])))
-                    row_node.logical_nodes.append(Node.find_node_by_id(int(logical_nodes[1])))
+                    node.logical_nodes.append(Node.find_node_by_id(int(logical_nodes[0])))
+                    node.logical_nodes.append(Node.find_node_by_id(int(logical_nodes[1])))
     except FileNotFoundError:
         print("No such file:" + node_file_name)
         Tools.end_program()
@@ -143,6 +131,7 @@ if is_random_mode == "Y":
         graph.round_plus()
         graph.split(random_node)
         #graph.clear()
+
     print("---")
     graph.round_plus()
     for i in range(leave_times):
@@ -165,31 +154,40 @@ if is_random_mode == "Y":
         #graph.clear()
 
 elif is_random_mode == "N":
-    for i in range(join_times):
 
-        print("Now join times：" + str(i + 1))
+    while True:
+        node_id = int(input("Please input node's id:"))
+        contact_node = Node.find_node_by_id(node_id)
+        if contact_node is None:
+            print("No such node")
 
-        node_alive_list = [x for x in Node.node_list if x.end < 0]
-
-        while True:
-            node_id = int(input("Please input node's id:"))
-            split_node = Node.find_node_by_id(node_id)
-            if split_node:
-                if split_node.end < 0:
-                    if Node.is_res_node(split_node):
-                        graph.round_plus()
-                        graph.split(split_node)
-                        break
-                    else:
-                        print("Not Res-Node,Search the Nearest Res-Node...")
-                        Node.breadth_first_search(split_node)
-                        break
-                else:
-                    print("Not Alive")
+        else:
+            if contact_node.end > 0:
+                print("Not Alive")
             else:
-                print("No such node")
+                break
 
-        # graph.clear()
+    for i in range(join_times):
+        print("Now join times：" + str(i + 1))
+        node_alive_list = [x for x in Node.node_list if x.end < 0]
+        flag = Node.is_res_node(contact_node)
+        if flag:
+            split_node = contact_node
+            graph.round_plus()
+            graph.split(split_node)
+            # コンタクトノードの更新
+            new_node_list = [x for x in Node.node_list if x.start == graph.round]  # 新しくできたノードをリストにする
+            proxy = new_node_list[0]
+            for new_node in new_node_list:
+                if len(proxy.in_neighbours) <= len(new_node.in_neighbours):
+                    proxy = new_node
+                    contact_node = proxy
+        else:
+            print("Not Res-Node,Search the Nearest Res-Node...")
+            split_node = Node.breadth_first_search(contact_node)
+            graph.round_plus()
+            graph.split(split_node)
+    # graph.clear()
 
     print("---")
     graph.round_plus()
@@ -221,7 +219,7 @@ elif is_random_mode == "N":
         print("new node is %s,logical nodes is：%s, %s" % (new_node.label, new_node.logical_nodes[0].label, new_node.logical_nodes[1].label))
         graph.round_plus()
         #graph.clear()
-print("---Now write into file---")
+print("---")
 #for node in Node.node_list:
 #    print(node)
 
@@ -273,5 +271,6 @@ for edge in Edge.edge_list:
 output_file_name = input("Please input file name:") + '.gexf'
 output_file = open(output_file_name, "wb")
 gexf.write(output_file)
+
 
 #Tools.end_program()

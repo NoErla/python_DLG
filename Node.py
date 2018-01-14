@@ -132,10 +132,10 @@ class Node:
                         if Node.is_res_node(n):
                             print("The nearest Res-Node is:")
                             print(n)
-                            return node
+                            return n
                         else:
                             queue.append(n)
                     else:
                         continue
 
-        bfs()
+        return bfs()
