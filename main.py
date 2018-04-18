@@ -117,6 +117,12 @@ graph.round_plus()
 #graph.merge(graph.nodeList[3], graph.nodeList[4])
 print("---")
 if is_random_mode == "Y":
+
+    seed = input("input seed: ")
+
+    if seed is not None:
+        random.seed(seed)
+
     for i in range(join_times):
 
         print("Now join times：" + str(i+1))
